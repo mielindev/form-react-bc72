@@ -1,26 +1,31 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  CHANGE_STUDENT,
+  SUBMIT_STUDENT,
+  UPDATE_STUDENT,
+} from "./redux/constant";
 
 export default function CreateForm() {
   let student = useSelector((state) => state.studentReducer.studentForm);
   let dispatch = useDispatch();
   let handleChangeStudent = (e) => {
     let action = {
-      type: "CHANGE_STUDENT",
+      type: CHANGE_STUDENT,
       payload: e.target,
     };
     dispatch(action);
   };
   let handleAddStudent = (e) => {
     let action = {
-      type: "SUBMIT_STUDENT",
+      type: SUBMIT_STUDENT,
       payload: e,
     };
     dispatch(action);
   };
   let handleUpdateStudent = (e) => {
     let action = {
-      type: "UPDATE_STUDENT",
+      type: UPDATE_STUDENT,
       payload: e,
     };
     dispatch(action);
@@ -28,7 +33,7 @@ export default function CreateForm() {
   return (
     <div>
       <h2 className="h1 text-white bg-dark p-3">Thông tin sinh viên</h2>
-      <form className="form-floating">
+      <form id="formStudent" className="form-floating">
         <div className="row">
           <div className="col">
             <label htmlFor="id">Mã sinh viên</label>
@@ -46,7 +51,7 @@ export default function CreateForm() {
               type="tel"
               className="form-control"
               name="phone"
-              placeholder="+84 1 234 5678"
+              placeholder="+84 123 456 789"
               value={student.phone}
             />
           </div>

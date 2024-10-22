@@ -1,24 +1,32 @@
 import { message } from "antd";
-
+import * as type from "./constant";
+let getLocalData = () => {
+  let data = localStorage.getItem("STUDENTS");
+  if (data) {
+    return JSON.parse(data);
+  } else {
+    return [];
+  }
+};
 let initialState = {
   studentForm: {
-    id: "1",
-    fullName: "alice",
-    email: "alice@gmail.com",
-    phone: "0123456789",
+    id: "",
+    fullName: "",
+    email: "",
+    phone: "",
   },
-  listStudent: [],
+  listStudent: getLocalData(),
 };
 
 let studentReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "CHANGE_STUDENT": {
+    case type.CHANGE_STUDENT: {
       let data = action.payload;
       let { value, name } = data;
       let cloneStudent = { ...state.studentForm, [name]: value };
       return { ...state, studentForm: cloneStudent };
     }
-    case "SUBMIT_STUDENT": {
+    case type.SUBMIT_STUDENT: {
       let event = action.payload;
       event.preventDefault();
       let data = { ...state.studentForm };
@@ -32,9 +40,11 @@ let studentReducer = (state = initialState, action) => {
       } else {
         message.error("Sinh viên đã tồn tại!");
       }
+      let datajson = JSON.stringify(cloneListStudent);
+      localStorage.setItem("STUDENTS", datajson);
       return { ...state, listStudent: cloneListStudent };
     }
-    case "REMOVE_STUDENT": {
+    case type.REMOVE_STUDENT: {
       let idStudent = action.payload;
       let index = state.listStudent.findIndex((item) => {
         return item.id === idStudent;
@@ -42,11 +52,12 @@ let studentReducer = (state = initialState, action) => {
       let cloneListStudent = [...state.listStudent];
       cloneListStudent.splice(index, 1);
       message.warning("Xoá thành công!");
+      let datajson = JSON.stringify(cloneListStudent);
+      localStorage.setItem("STUDENTS", datajson);
       return { ...state, listStudent: cloneListStudent };
     }
-    case "EDIT_STUDENT": {
+    case type.EDIT_STUDENT: {
       let data = action.payload;
-      console.log("👉 ~ studentReducer ~ data:", data);
       let cloneStudent = {
         ...state.studentForm,
         id: data.id,
@@ -57,11 +68,10 @@ let studentReducer = (state = initialState, action) => {
       document.querySelector("input[name='id'").disabled = true;
       return { ...state, studentForm: cloneStudent };
     }
-    case "UPDATE_STUDENT": {
+    case type.UPDATE_STUDENT: {
       let event = action.payload;
       event.preventDefault();
       let data = { ...state.studentForm };
-      console.log("👉 ~ studentReducer ~ data:", data);
       let index = state.listStudent.findIndex((item) => {
         return item.id === data.id;
       });
@@ -72,6 +82,8 @@ let studentReducer = (state = initialState, action) => {
         email: data.email,
         phone: data.phone,
       };
+      let datajson = JSON.stringify(cloneListStudent);
+      localStorage.setItem("STUDENTS", datajson);
       return { ...state, listStudent: cloneListStudent };
     }
     default:
