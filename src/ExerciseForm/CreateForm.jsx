@@ -2,12 +2,14 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   CHANGE_STUDENT,
+  RESET_FORM,
   SUBMIT_STUDENT,
   UPDATE_STUDENT,
 } from "./redux/constant";
 
 export default function CreateForm() {
   let student = useSelector((state) => state.studentReducer.studentForm);
+  let readOnly = useSelector((state) => state.studentReducer.isReadOnly);
   let dispatch = useDispatch();
   let handleChangeStudent = (e) => {
     let action = {
@@ -30,6 +32,13 @@ export default function CreateForm() {
     };
     dispatch(action);
   };
+  let handleResetForm = (e) => {
+    let action = {
+      type: RESET_FORM,
+      payload: e,
+    };
+    dispatch(action);
+  };
   return (
     <div>
       <h2 className="h1 text-white bg-dark p-3">Thông tin sinh viên</h2>
@@ -38,6 +47,7 @@ export default function CreateForm() {
           <div className="col">
             <label htmlFor="id">Mã sinh viên</label>
             <input
+              disabled={readOnly}
               onChange={handleChangeStudent}
               type="number"
               className="form-control"
@@ -76,14 +86,18 @@ export default function CreateForm() {
             />
           </div>
         </div>
-        <button
-          onClick={handleAddStudent}
-          className="btn btn-success my-3 fw-bold"
-        >
+
+        <button onClick={handleAddStudent} className="btn btn-success fw-bold">
           Thêm sinh viên
         </button>
-        <button onClick={handleUpdateStudent} className="btn btn-primary ms-3">
+        <button
+          onClick={handleUpdateStudent}
+          className="btn btn-primary m-3 fw-bold"
+        >
           Cập nhật
+        </button>
+        <button onClick={handleResetForm} className="btn btn-danger fw-bold">
+          Cài lại
         </button>
       </form>
     </div>

@@ -3,3 +3,5 @@ export const EDIT_STUDENT = "EDIT_STUDENT";
 export const CHANGE_STUDENT = "CHANGE_STUDENT";
 export const SUBMIT_STUDENT = "SUBMIT_STUDENT";
 export const UPDATE_STUDENT = "UPDATE_STUDENT";
+export const RESET_FORM = "RESET_FORM";
+export const SEARCH_CHANGE = "SEARCH_CHANGE";

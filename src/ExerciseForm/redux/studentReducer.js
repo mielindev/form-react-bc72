@@ -16,6 +16,8 @@ let initialState = {
     phone: "",
   },
   listStudent: getLocalData(),
+  isReadOnly: false,
+  searchItem: "",
 };
 
 let studentReducer = (state = initialState, action) => {
@@ -27,15 +29,15 @@ let studentReducer = (state = initialState, action) => {
       return { ...state, studentForm: cloneStudent };
     }
     case type.SUBMIT_STUDENT: {
-      let event = action.payload;
-      event.preventDefault();
-      let data = { ...state.studentForm };
-      let index = state.listStudent.findIndex((item) => {
-        return item.id === data.id;
-      });
+      let e = action.payload;
+      e.preventDefault();
+      let cloneStudent = { ...state.studentForm };
       let cloneListStudent = [...state.listStudent];
+      let index = state.listStudent.findIndex((item) => {
+        return item.id === cloneStudent.id;
+      });
       if (index === -1) {
-        cloneListStudent.push(data);
+        cloneListStudent.push(cloneStudent);
         message.success("Thêm thành công!");
       } else {
         message.error("Sinh viên đã tồn tại!");
@@ -51,9 +53,9 @@ let studentReducer = (state = initialState, action) => {
       });
       let cloneListStudent = [...state.listStudent];
       cloneListStudent.splice(index, 1);
-      message.warning("Xoá thành công!");
       let datajson = JSON.stringify(cloneListStudent);
       localStorage.setItem("STUDENTS", datajson);
+      message.warning("Xoá thành công!");
       return { ...state, listStudent: cloneListStudent };
     }
     case type.EDIT_STUDENT: {
@@ -65,8 +67,7 @@ let studentReducer = (state = initialState, action) => {
         email: data.email,
         phone: data.phone,
       };
-      document.querySelector("input[name='id'").disabled = true;
-      return { ...state, studentForm: cloneStudent };
+      return { ...state, studentForm: cloneStudent, isReadOnly: true };
     }
     case type.UPDATE_STUDENT: {
       let event = action.payload;
@@ -84,7 +85,26 @@ let studentReducer = (state = initialState, action) => {
       };
       let datajson = JSON.stringify(cloneListStudent);
       localStorage.setItem("STUDENTS", datajson);
-      return { ...state, listStudent: cloneListStudent };
+      return { ...state, listStudent: cloneListStudent, isReadOnly: false };
+    }
+    case type.RESET_FORM: {
+      let e = action.payload;
+      e.preventDefault();
+      let cloneStudent = {
+        ...state.studentForm,
+        id: "",
+        fullName: "",
+        email: "",
+        phone: "",
+      };
+      return { ...state, studentForm: cloneStudent };
+    }
+    case type.SEARCH_CHANGE: {
+      let data = action.payload.target.value;
+      let cloneListStudent = state.listStudent.filter((student) => {
+        return student.fullName.toLowerCase().includes(data.toLowerCase());
+      });
+      return { ...state, searchItem: data, listStudent: cloneListStudent };
     }
     default:
       return state;
