@@ -16,6 +16,7 @@ let initialState = {
     phone: "",
   },
   listStudent: getLocalData(),
+  filteredStudents: getLocalData(),
   isReadOnly: false,
   searchItem: "",
 };
@@ -100,11 +101,15 @@ let studentReducer = (state = initialState, action) => {
       return { ...state, studentForm: cloneStudent };
     }
     case type.SEARCH_CHANGE: {
-      let data = action.payload.target.value;
-      let cloneListStudent = state.listStudent.filter((student) => {
-        return student.fullName.toLowerCase().includes(data.toLowerCase());
-      });
-      return { ...state, searchItem: data, listStudent: cloneListStudent };
+      const searchValue = action.payload.toLowerCase();
+      const filteredStudents = state.listStudent.filter((student) =>
+        student.fullName.toLowerCase().includes(searchValue)
+      );
+      return {
+        ...state,
+        searchItem: action.payload,
+        filteredStudents: filteredStudents,
+      };
     }
     default:
       return state;

@@ -8,7 +8,7 @@ export default function SearchForm() {
   let handleSearchChange = (e) => {
     let action = {
       type: SEARCH_CHANGE,
-      payload: e,
+      payload: e.target.value,
     };
     dispatch(action);
   };

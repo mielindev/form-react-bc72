@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { EDIT_STUDENT, REMOVE_STUDENT } from "./redux/constant";
 
 export default function RenderForm() {
-  let listStudent = useSelector((state) => state.studentReducer.listStudent);
+  let listStudent = useSelector(
+    (state) => state.studentReducer.filteredStudents
+  );
   let dispatch = useDispatch();
   let handleRemoveStudent = (id) => {
     let action = {
